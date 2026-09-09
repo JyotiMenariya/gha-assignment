@@ -1,0 +1,33 @@
+name: Greet Action
+description: Greeting composite action
+
+inputs:
+  name:
+    description: Name
+    required: true
+
+  env_name:
+    description: Environment name
+    required: false
+    default: dev
+
+outputs:
+  greeting:
+    description: Greeting message
+    value: ${{ steps.greeting.outputs.greeting }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Prepare greeting
+      shell: bash
+      run: echo "Preparing greeting for ${{ inputs.name }}"
+
+    - name: Create greeting
+      id: greeting
+      shell: bash
+      run: |
+        GREETING="Hello ${{ inputs.name }}, welcome to deboistech ${{ inputs.env_name }}."
+        echo "$GREETING"
+        echo "greeting=$GREETING" >> "$GITHUB_OUTPUT"
